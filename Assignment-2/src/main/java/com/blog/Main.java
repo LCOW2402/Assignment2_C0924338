@@ -1,57 +1,41 @@
 package com.blog;
 
-import com.blog.model.Person;
-import com.blog.model.BlogPost;
+import java.util.List;
+import java.util.Scanner;
+
 import com.blog.model.Blog;
-import java.util.Arrays;
+import com.blog.service.BlogService;
 
 public class Main {
     public static void main(String[] args) {
+        System.out.println("🚀 Loading Blog Data...");
+
+        // ✅ Load Blog from JSON
+        Blog blog = BlogService.loadBlogFromJson();
+
+        // ✅ Print total posts and contributors
+        System.out.println("📌 Total Blog Posts: " + blog.getPosts().size());
+        System.out.println("📌 Total Contributors: " + blog.getContributors().size());
+
+        // ✅ Prompt user for age input
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter age to find blog posts: ");
+        
         try {
-            System.out.println("🚀 Starting Part 1: Testing Person, BlogPost, and Blog Classes");
+            int age = scanner.nextInt();
+            scanner.close();
 
-            // ✅ Create a Person instance
-            Person person1 = Person.builder()
-                    .id("P001")
-                    .firstName("John")
-                    .lastName("Doe")
-                    .age(30)
-                    .gender("Male")
-                    .build();
+            // ✅ Get posts by author age
+            List<String> postIds = blog.getPostsByAuthorAge(age);
+            
+            if (postIds.isEmpty()) {
+                System.out.println("❌ No blog posts found for authors aged " + age);
+            } else {
+                System.out.println("📌 Blog Posts by Authors Aged " + age + ": " + postIds);
+            }
 
-            Person person2 = Person.builder()
-                    .id("P002")
-                    .firstName("Jane")
-                    .lastName("Smith")
-                    .age(25)
-                    .gender("Female")
-                    .build();
-
-            // ✅ Create BlogPost instances
-            BlogPost post1 = BlogPost.builder()
-                    .id("B001")
-                    .authorId("P001") // Matches John's ID
-                    .postContent("Hello, this is my first blog post!")
-                    .build();
-
-            BlogPost post2 = BlogPost.builder()
-                    .id("B002")
-                    .authorId("P002") // Matches Jane's ID
-                    .postContent("Another day, another blog post.")
-                    .build();
-
-            // ✅ Create a Blog with posts and contributors
-            Blog blog = new Blog(Arrays.asList(post1, post2), Arrays.asList(person1, person2));
-
-            // ✅ Print the created objects to verify correctness
-            System.out.println("📌 Created Person 1: " + person1);
-            System.out.println("📌 Created Person 2: " + person2);
-            System.out.println("📌 Created Blog Post 1: " + post1);
-            System.out.println("📌 Created Blog Post 2: " + post2);
-            System.out.println("📌 Created Blog: " + blog);
-
-        } catch (IllegalArgumentException e) {
-            System.err.println("❌ Error: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("❌ Invalid input. Please enter a valid number.");
         }
     }
 }

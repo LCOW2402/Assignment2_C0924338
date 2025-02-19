@@ -15,7 +15,12 @@
     </properties>
 
     <!-- ✅ Dependencies -->
+	
+            
+
+
     <dependencies>
+
         <!-- ✅ Lombok (For @Getter, @Builder, etc.) -->
         <dependency>
             <groupId>org.projectlombok</groupId>
